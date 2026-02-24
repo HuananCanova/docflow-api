@@ -21,6 +21,9 @@ public class AwsConfig {
     @Value("${aws.region}")
     private String region;
 
+    @Value("${aws.textract.region}")
+    private String textractRegion;
+
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(acessKeyId, secretKey);
@@ -34,7 +37,7 @@ public class AwsConfig {
     public TextractClient textractClient() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(acessKeyId, secretKey);
         return TextractClient.builder()
-                .region(Region.of(region))
+                .region(Region.of(textractRegion))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
     }

@@ -19,6 +19,7 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final S3Service s3Service;
+    private final TextractService textractService;
 
     public DocumentResponseDTO upload(MultipartFile file) throws IOException {
         String s3key = s3Service.uploadFile(file);
@@ -27,8 +28,13 @@ public class DocumentService {
         document.setFileName(file.getOriginalFilename());
         document.setS3Key(s3key);
         Document saved = documentRepository.save(document);
+        String extratecText = textractService.extractText(s3key);
+        document.setExtractedText(extratecText);
+        document.setStatus("COMPLETED");
 
-        return toDTO(saved);
+        Document updated = documentRepository.save(document);
+
+        return toDTO(updated);
     }
 
     public List<DocumentResponseDTO> findAll(){
