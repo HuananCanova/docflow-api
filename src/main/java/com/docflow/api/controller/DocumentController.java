@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,7 +18,7 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @PostMapping("/upload")
-    public ResponseEntity<DocumentResponseDTO> upload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<DocumentResponseDTO> upload(@RequestParam("file") MultipartFile file) throws IOException {
         DocumentResponseDTO response = documentService.upload(file);
         return ResponseEntity.ok(response);
     }

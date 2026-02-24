@@ -7,20 +7,25 @@ import com.docflow.api.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DocumentService {
-    private final DocumentRepository documentRepository;
 
-    public DocumentResponseDTO upload(MultipartFile file){
+    private final DocumentRepository documentRepository;
+    private final S3Service s3Service;
+
+    public DocumentResponseDTO upload(MultipartFile file) throws IOException {
+        String s3key = s3Service.uploadFile(file);
+
         Document document = new Document();
         document.setFileName(file.getOriginalFilename());
-        document.setS3Key("placeholder/" + file.getOriginalFilename());
-
+        document.setS3Key(s3key);
         Document saved = documentRepository.save(document);
 
         return toDTO(saved);
