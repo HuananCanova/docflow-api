@@ -17,7 +17,7 @@ public class Document {
     @Column(nullable = false)
     private String fileName;
     @Column(nullable = false)
-    private String s3key;
+    private String s3Key;
     @Column(nullable = false)
     private String status;
     @Column(columnDefinition = "TEXT")
