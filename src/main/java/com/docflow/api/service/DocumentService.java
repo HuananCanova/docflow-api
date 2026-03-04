@@ -3,6 +3,7 @@ package com.docflow.api.service;
 
 import com.docflow.api.dto.DocumentResponseDTO;
 import com.docflow.api.entity.Document;
+import com.docflow.api.exception.ResourceNotFoundException;
 import com.docflow.api.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class DocumentService {
         Document document = new Document();
         document.setFileName(file.getOriginalFilename());
         document.setS3Key(s3key);
-        Document saved = documentRepository.save(document);
+        documentRepository.save(document);
         String extratecText = textractService.extractText(s3key);
         document.setExtractedText(extratecText);
         document.setStatus("COMPLETED");
@@ -46,7 +47,7 @@ public class DocumentService {
 
     public DocumentResponseDTO findById(Long id){
         Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Document not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Document not found with ID: " + id));
         return toDTO(document);
     }
 
